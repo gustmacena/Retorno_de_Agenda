@@ -30,20 +30,33 @@ O objetivo é **economizar tempo**, reduzir **erros manuais** e otimizar o fluxo
 
 ## 📌 Requisitos  
 
-🔹 **Python 3.x**  
-🔹 **Bibliotecas Necessárias:**  
+🔹 **Python 3.x** (apenas para gerar o executável)
+🔹 **Bibliotecas Necessárias para compilar:**
    ```sh
-   pip install selenium tkinter openpyxl Pillow webdriver_manager
+   pip install -r requirements.txt
    ```
-🔹 **Navegador e WebDriver compatíveis (Chrome, Edge, etc.)**  
+🔹 **Navegador compatível (Chrome, Edge, etc.)**
+
+---
+
+## 🚧 Como gerar o executável
+
+1. Instale as dependências indicadas em `requirements.txt`.
+2. Execute o script `build.py`:
+   ```sh
+   python build.py
+   ```
+3. O executável e os arquivos necessários serão criados na pasta `dist/`.
+   Basta copiar esse diretório para outra máquina e executar `RetornoAtacadao.exe`.
 
 ---
 
 ## 📂 Estrutura do Projeto  
 
-📁 `script.py` → Código principal da automação  
-📁 `imgs/` → Diretório com imagens usadas na interface gráfica  
-📁 `Base Retorno Atacadão.xlsx` → Planilha Excel utilizada para leitura e atualização dos dados  
+📁 `retornos_atacadao.py` → Código principal da automação
+📁 `imgs/` → Diretório com imagens usadas na interface gráfica
+📁 `Base Retorno Atacadão.xlsx` → Planilha Excel utilizada para leitura e atualização dos dados
+📁 `build.py` → Script para gerar o executável
 
 ---
 
