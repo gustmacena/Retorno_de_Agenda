@@ -34,5 +34,11 @@ if os.path.exists(imgs_source):
         shutil.rmtree(imgs_dest)
     shutil.copytree(imgs_source, imgs_dest)
 
+# Copiar planilha base
+excel_source = "Base Retorno Atacadao.xlsx"
+excel_dest = os.path.join(dist_folder, "Base Retorno Atacadao.xlsx")
+if os.path.exists(excel_source):
+    shutil.copy2(excel_source, excel_dest)
+
 print("Build concluído com sucesso!")
-print(f"O executável está disponível em: {dist_folder}") 
+print(f"O executável está disponível em: {dist_folder}")

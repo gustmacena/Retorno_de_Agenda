@@ -32,10 +32,17 @@ def limpar_arquivos_temporarios():
     except Exception as e:
         print(f"Erro ao limpar arquivos temporários: {e}")
 
+def resource_path(relative_path: str) -> str:
+    """Obtain path to resource whether running as script or PyInstaller exe."""
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+
 class AutomationRetorno:
     def __init__(self, root):
         self.driver = None
-        self.base_path = os.path.join(os.path.expanduser('~'), 'Desktop', 'Retorno Atacadão', 'Base Retorno Atacadao.xlsx')
+        self.app_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__))
+        self.base_path = os.path.join(self.app_dir, 'Base Retorno Atacadao.xlsx')
         self.root = root
         self.setup_ui()
         self.start_time = None
@@ -57,7 +64,7 @@ class AutomationRetorno:
 
     def get_driver_path(self):
         try:
-            chrome_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'chrome')
+            chrome_folder = os.path.join(self.app_dir, 'chrome')
             if not os.path.exists(chrome_folder):
                 os.makedirs(chrome_folder)
             
@@ -80,8 +87,8 @@ class AutomationRetorno:
         try:
             options = self.get_driver_path()
             options.add_argument("--start-maximized")
-            
-            chrome_executable = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'chrome', 'chrome.exe')
+
+            chrome_executable = os.path.join(self.app_dir, 'chrome', 'chrome.exe')
             if os.path.exists(chrome_executable):
                 options.binary_location = chrome_executable
             
@@ -326,76 +333,81 @@ def stop_automation():
     if automation_instance:
         automation_instance.stop_automation()
 
-# Interface Gráfica
-root = tk.Tk()
-root.title("Automação Atacadão")
-root.resizable(width=False, height=False)
+def main():
+    global automation_instance, root
+    root = tk.Tk()
+    root.title("Automação Atacadão")
+    root.resizable(width=False, height=False)
 
-# Configurações de cores
-bauducco_yellow = "#FEB81C"
-bauducco_red = "#FF0000"
-bauducco_verde = "#1FB757"
-bauducco_black = "#000000"
+    # Configurações de cores
+    bauducco_yellow = "#FEB81C"
+    bauducco_red = "#FF0000"
+    bauducco_verde = "#1FB757"
+    bauducco_black = "#000000"
 
-root.configure(bg=bauducco_yellow)
+    root.configure(bg=bauducco_yellow)
 
-# Carregar imagens
-try:
-    left_logo_img = Image.open(os.path.join('imgs', 'Logo_Bauducco.png'))
-    left_logo_img = left_logo_img.resize((120, 95), Image.LANCZOS)
-    left_logo_photo = ImageTk.PhotoImage(left_logo_img)
+    # Carregar imagens
+    try:
+        left_logo_img = Image.open(resource_path(os.path.join('imgs', 'Logo_Bauducco.png')))
+        left_logo_img = left_logo_img.resize((120, 95), Image.LANCZOS)
+        left_logo_photo = ImageTk.PhotoImage(left_logo_img)
 
-    right_logo_img = Image.open(os.path.join('imgs', 'Logo_Atacadao.png'))
-    right_logo_img = right_logo_img.resize((120, 95), Image.LANCZOS)
-    right_logo_photo = ImageTk.PhotoImage(right_logo_img)
-except Exception as e:
-    messagebox.showerror("Erro", "Erro ao carregar imagens do programa")
+        right_logo_img = Image.open(resource_path(os.path.join('imgs', 'Logo_Atacadao.png')))
+        right_logo_img = right_logo_img.resize((120, 95), Image.LANCZOS)
+        right_logo_photo = ImageTk.PhotoImage(right_logo_img)
+    except Exception as e:
+        messagebox.showerror("Erro", "Erro ao carregar imagens do programa")
 
-# Logo e Títulos 
-top_frame = tk.Frame(root, bg=bauducco_yellow)
-top_frame.pack(pady=10, fill="x")
+    # Logo e Títulos
+    top_frame = tk.Frame(root, bg=bauducco_yellow)
+    top_frame.pack(pady=10, fill="x")
 
-left_logo = tk.Label(top_frame, image=left_logo_photo, bg=bauducco_yellow)
-left_logo.pack(side="left", padx=20)
+    left_logo = tk.Label(top_frame, image=left_logo_photo, bg=bauducco_yellow)
+    left_logo.pack(side="left", padx=20)
 
-right_logo = tk.Label(top_frame, image=right_logo_photo, bg=bauducco_yellow)
-right_logo.pack(side="right", padx=20)
+    right_logo = tk.Label(top_frame, image=right_logo_photo, bg=bauducco_yellow)
+    right_logo.pack(side="right", padx=20)
 
-title_label = tk.Label(root, text="Retorno de agenda", font=("Helvetica", 15, "bold"), bg=bauducco_yellow, fg=bauducco_black)
-title_label.pack(pady=(10, 20))
+    title_label = tk.Label(root, text="Retorno de agenda", font=("Helvetica", 15, "bold"), bg=bauducco_yellow, fg=bauducco_black)
+    title_label.pack(pady=(10, 20))
 
-dev_label = tk.Label(root, text="Desenvolvedor: Gustavo Macena", font=("Helvetica", 10), bg=bauducco_yellow, fg=bauducco_black)
-dev_label.pack(pady=(1, 1), anchor="w")
+    dev_label = tk.Label(root, text="Desenvolvedor: Gustavo Macena", font=("Helvetica", 10), bg=bauducco_yellow, fg=bauducco_black)
+    dev_label.pack(pady=(1, 1), anchor="w")
 
-dev_label = tk.Label(root, text="Equipe: Projetos de melhoria continua", font=("Helvetica", 10), bg=bauducco_yellow, fg=bauducco_black)
-dev_label.pack(pady=(1,10), anchor="w")
+    dev_label = tk.Label(root, text="Equipe: Projetos de melhoria continua", font=("Helvetica", 10), bg=bauducco_yellow, fg=bauducco_black)
+    dev_label.pack(pady=(1,10), anchor="w")
 
 # Frame para botões
-button_frame = tk.Frame(root, bg=bauducco_yellow)
-button_frame.pack(pady=20)
+    button_frame = tk.Frame(root, bg=bauducco_yellow)
+    button_frame.pack(pady=20)
 
 # Botões
-start_button = tk.Button(button_frame, text="Iniciar", font=("Helvetica", 14), bg=bauducco_verde, fg=bauducco_black, command=start_automation)
-start_button.pack(side=tk.LEFT, padx=10)
+    start_button = tk.Button(button_frame, text="Iniciar", font=("Helvetica", 14), bg=bauducco_verde, fg=bauducco_black, command=start_automation)
+    start_button.pack(side=tk.LEFT, padx=10)
 
-stop_button = tk.Button(button_frame, text="Parar", font=("Helvetica", 14), bg=bauducco_red, fg=bauducco_black, command=stop_automation)
-stop_button.pack(side=tk.LEFT, padx=10)
+    stop_button = tk.Button(button_frame, text="Parar", font=("Helvetica", 14), bg=bauducco_red, fg=bauducco_black, command=stop_automation)
+    stop_button.pack(side=tk.LEFT, padx=10)
 
 # Label de Loading
-automation_instance = None
+    automation_instance = None
 
 # Tratamento de fechamento da janela
-def on_closing():
-    if automation_instance and automation_instance.is_running:
-        if messagebox.askokcancel("Confirmar", "A automação está em execução. Deseja realmente sair?"):
-            automation_instance.stop_automation()
+    def on_closing():
+        if automation_instance and automation_instance.is_running:
+            if messagebox.askokcancel("Confirmar", "A automação está em execução. Deseja realmente sair?"):
+                automation_instance.stop_automation()
+                limpar_arquivos_temporarios()
+                root.destroy()
+        else:
             limpar_arquivos_temporarios()
             root.destroy()
-    else:
-        limpar_arquivos_temporarios()
-        root.destroy()
 
-root.protocol("WM_DELETE_WINDOW", on_closing)
+    root.protocol("WM_DELETE_WINDOW", on_closing)
 
-# Main loop da interface
-root.mainloop()
+    # Main loop da interface
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
