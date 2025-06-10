@@ -375,7 +375,7 @@ def main():
     dev_label = tk.Label(root, text="Desenvolvedor: Gustavo Macena", font=("Helvetica", 10), bg=bauducco_yellow, fg=bauducco_black)
     dev_label.pack(pady=(1, 1), anchor="w")
 
-    dev_label = tk.Label(root, text="Equipe: Projetos de melhoria continua", font=("Helvetica", 10), bg=bauducco_yellow, fg=bauducco_black)
+    dev_label = tk.Label(root, text="Equipe: Projetos e Melhoria Contínua", font=("Helvetica", 10), bg=bauducco_yellow, fg=bauducco_black)
     dev_label.pack(pady=(1,10), anchor="w")
 
 # Frame para botões
